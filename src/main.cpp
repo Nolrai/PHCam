@@ -89,6 +89,7 @@ const char* password = "littleoctopus244";
   #define VSYNC_GPIO_NUM    25
   #define HREF_GPIO_NUM     23
   #define PCLK_GPIO_NUM     22
+  #define LED_NUM            4
 #else
   #error "Camera model not selected"
 #endif
@@ -177,6 +178,9 @@ void startCameraServer(){
 
 void setup() {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+
+  pinMode(LED_NUM, OUTPUT);
+  digitalWrite(LED_NUM, HIGH);
  
   Serial.begin(115200);
   Serial.setDebugOutput(false);
@@ -236,8 +240,11 @@ void setup() {
   startCameraServer();
 }
 
+bool light = false; 
 void loop() {
   delay(1000);
   Serial.print("Camera Stream Ready! Go to: http://");
   Serial.print(WiFi.localIP().toString());
+  digitalWrite(LED_NUM, light ? HIGH : LOW);
+  light = !light;
 }
